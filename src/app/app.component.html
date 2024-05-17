@@ -1,0 +1,252 @@
+<div class="pt-5">
+  <div class="conteiner-lg">
+    <div class="row">
+      <div class="col-md-4 offset-2 content">
+        <!-- Nesnelerin içinde bulanacağı büyük dikdörtgenizmiz -->
+        <div class="example-boundary" #boundary>
+          <div
+            class="example-input"
+            *ngFor="let item of allItems; let i = index"
+            (click)="selectItem(item)"
+            cdkDrag
+            [cdkDragBoundary]="boundary"
+            (cdkDragEnded)="onDragEnd($event, i)"
+          >
+            <!-- Metin girişi öğesi -->
+            <input
+              *ngIf="item.type === 'text'"
+              type="text"
+              [name]="item.name"
+              [(ngModel)]="item.value"
+              [style.fontFamily]="item.font"
+              [style.fontSize.px]="item.font_size"
+              [style.fontWeight]="item.bold ? 'bold' : 'normal'"
+              [style.fontStyle]="item.italic ? 'italic' : 'normal'"
+              [style.textAlign]="item.alignment"
+              [style.textDecoration]="item.underline ? 'underline' : ''"
+              [style.textDecoration]="item.strikethrough ? 'line-through' : ''"
+            />
+            <!-- Fotoğraf öğesi -->
+            <img
+              *ngIf="item.type === 'image'"
+              [name]="item.name"
+              [src]="item.value"
+              [style.width.px]="120"
+              [style.height.px]="120"
+              (click)="selectItem(item)"
+              cdkDrag
+              [cdkDragBoundary]="boundary"
+              (cdkDragEnded)="onDragEnd($event, i)"
+            />
+          </div>
+        </div>
+      </div>
+      <!-- kağıt seçimi div imiz -->
+      <div class="col-md-4 settings">
+        <h4>Kağıt Seçimi</h4>
+        <div class="row pt-1">
+          <div class="col-md-3">
+            <select class="form-select">
+              <option value="left">A4</option>
+              <option value="center">A5</option>
+              <option value="right">Özel</option>
+            </select>
+          </div>
+          <div class="col-md-1">
+            <label class="form-label pt-1">X:</label>
+          </div>
+          <div class="col-md-3">
+            <input type="number" placeholder="1000 MM" class="form-control" />
+          </div>
+          <div class="col-md-1">
+            <label class="form-label pt-1">Y:</label>
+          </div>
+          <div class="col-md-3">
+            <input type="number" placeholder="1000 MM" class="form-control" />
+          </div>
+        </div>
+
+        <!-- yazı yönü font stili font büyüklüğü ve alan adı kısmı -->
+        <div *ngIf="selectedItem" class="pt-3">
+          <h4>Özellikler</h4>
+          <div class="row">
+            <div class="col-md-3">
+              <label
+                class="form-label pt-1"
+                *ngIf="selectedItem.type === 'text'"
+              >
+                Yazı Yönü:
+                <select
+                  [(ngModel)]="selectedItem.alignment"
+                  class="form-select"
+                >
+                  <option value="left">Sola Yasla</option>
+                  <option value="center">Ortala</option>
+                  <option value="right">Sağa Yasla</option>
+                </select>
+              </label>
+            </div>
+            <div class="col-md-3">
+              <label
+                class="form-label pt-1"
+                *ngIf="selectedItem.type === 'text'"
+              >
+                Font Stili:
+                <select [(ngModel)]="selectedItem.font" class="form-select">
+                  <option value="Calibri" style="font-family: Calibri">
+                    Calibri
+                  </option>
+                  <option value="İnitial" style="font-family: İnitial">
+                    İnitial
+                  </option>
+                  <option value="Verdana" style="font-family: Verdana">
+                    Verdana
+                  </option>
+                </select>
+              </label>
+            </div>
+            <div class="col-md-3">
+              <label
+                class="form-label pt-1"
+                *ngIf="selectedItem.type === 'text'"
+                >Font Boyutu:
+                <input
+                  class="form-control"
+                  type="number"
+                  [(ngModel)]="selectedItem.font_size"
+                />
+              </label>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label pt-1"
+                >Alan Adı:
+                <input
+                  class="form-control"
+                  type="text"
+                  [(ngModel)]="selectedItem.name"
+                />
+              </label>
+            </div>
+          </div>
+        </div>
+
+          <!-- kalın italik altı çizili ve üstü çizili ayarlarımız -->
+        <div *ngIf="selectedItem" class="pt-2">
+          <div class="row">
+            <div class="col-md-3">
+              <label
+                class="form-label pt-1"
+                *ngIf="selectedItem.type === 'text'"
+                style="font-weight: bold"
+              >
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  [(ngModel)]="selectedItem.bold"
+                />
+                Kalın Yazı
+              </label>
+            </div>
+            <div class="col-md-3">
+              <label
+                class="form-label pt-1"
+                *ngIf="selectedItem.type === 'text'"
+                style="font-style: italic"
+              >
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  [(ngModel)]="selectedItem.italic"
+                />
+                İtaik
+              </label>
+            </div>
+            <div class="col-md-3">
+              <label
+                class="form-label pt-1"
+                *ngIf="selectedItem.type === 'text'"
+                style="text-decoration: underline"
+              >
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  [(ngModel)]="selectedItem.underline"
+                />
+                Altı Çizili
+              </label>
+            </div>
+            <div class="col-md-3">
+              <label
+                class="form-label pt-1"
+                *ngIf="selectedItem.type === 'text'"
+                style="text-decoration: line-through"
+              >
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  [(ngModel)]="selectedItem.strikethrough"
+                />
+                Üstü Çizili
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- manuel koordinat girişi -->
+        <div class="row" *ngIf="selectedItem">
+          <div class="col-md-4">
+            <label class="form-label pt-1"
+              >X Koordinat:
+              <input
+                class="form-control"
+                type="number"
+                [(ngModel)]="selectedItem.y_axis"
+                (input)="
+                  updatePositionX($event, items.text.indexOf(selectedItem))
+                "
+              />
+            </label>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label pt-1"
+              >Y Koordinat:
+              <input
+                class="form-control"
+                type="number"
+                [(ngModel)]="selectedItem.x_axis"
+                (input)="
+                  updatePositionY($event, items.text.indexOf(selectedItem))
+                "
+              />
+            </label>
+          </div>
+        </div>
+
+         <!-- button grubumuz -->
+        <div class="row pt-3">
+          <div class="col-lg-3">
+            <button (click)="addText('text')" class="btn btn-primary">
+              Text Ekle
+            </button>
+          </div>
+
+          <div class="col-lg-4">
+            <input
+              type="file"
+              (change)="addImage($event)"
+              class="pt-1"
+              accept=".jpg, .jpeg, .png"
+            />
+          </div>
+
+          <div class="col-lg-5">
+            <button (click)="sendData()" class="btn btn-primary">
+              Kaydet ve Gönder
+            </button>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
